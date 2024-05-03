@@ -10,6 +10,7 @@ const swaggerDocument = require('./swagger.json');
 
 
 
+
 const usersDb = new Datastore({
     filename: "users.db",
     autoload: true,
@@ -33,7 +34,7 @@ const setupSwagger = (app, PORT) => {
 
   app.get('/api/docs', swaggerUi.setup(swaggerDocument));
   console.log(`Swagger UI is available at http://localhost:${PORT}/api/docs`);
-  opn(`http://localhost:${PORT}/api/docs`);
+
 };
 
 
