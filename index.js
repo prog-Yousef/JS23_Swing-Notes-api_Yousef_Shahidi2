@@ -1,11 +1,12 @@
-const express = require('express');
+const express = require("express");
+const app = express();
 
 const Datastore = require('nedb-promises');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const swaggerUi = require("swagger-ui-express");
 const dotenv = require('dotenv');
-const swaggerDocument = require('./swagger.json')
+const swaggerDocument = require('./swagger.json');
 
 
 
@@ -21,8 +22,21 @@ const notesDb = new Datastore({
 
 dotenv.config();
 
-const app = express();
 const PORT = 3000;
+
+app.use(express.json());
+
+
+const setupSwagger = (app, PORT) => {
+  app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+
+  app.get('/api/docs', swaggerUi.setup(swaggerDocument));
+  console.log(`Swagger UI is available at http://localhost:${PORT}/api-docs`);
+  opn(`http://localhost:${PORT}/api-docs`);
+};
+
+
 
 setupSwagger(app, PORT);
 /* ******************************************************************************************* */
@@ -237,16 +251,6 @@ app.delete('/api/notes', authToken, async (req, res) => {
     }
 });
 
-
-
-
-
-const setupSwagger = (app, PORT) => {
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
-  console.log(`Swagger UI is available at http://localhost:${PORT}/api-docs`);
-  opn(`http://localhost:${PORT}/api-docs`);
-};
 
 
 

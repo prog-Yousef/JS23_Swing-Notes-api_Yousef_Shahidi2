@@ -1,0 +1,507 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Swing notes API",
+        "description": "Create your own notebook with Swing notes API",
+        "version": "1.0.0"
+    },
+    "host": "localhost:3000",
+    "basePath": "/api",
+    "schemes": [
+        "http"
+    ],
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "Use Bearer token to authenticate requests.\\nFormat should look like `Bearer 'TOKEN HERE'`"
+        }
+    },
+    "paths": {
+        "/user/signup": {
+            "post": {
+                "description": "Create a user",
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "username": {
+                                    "type": "string",
+                                    "example": "powerpuff"
+                                },
+                                "password": {
+                                    "type": "string",
+                                    "example": "password123456"
+                                }
+                            }
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "username": {
+                                    "type": "string",
+                                    "example": "powerpuff"
+                                },
+                                "password": {
+                                    "type": "string",
+                                    "example": "$2aada$addad10$dadasfdsafs/DBtJ9AAOj2Xe4SRbloA04PM1atkgcrEn8g/Am22"
+                                },
+                                "_id": {
+                                    "type": "string",
+                                    "example": "662b4d091dadafaadadadadadf"
+                                },
+                                "createdAt": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "example": "2024-04-26T06:38:17.678Z"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "409": {
+                        "description": "User already exists"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/user/login": {
+            "post": {
+                "description": "Log in with created user",
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "username": {
+                                    "type": "string",
+                                    "example": "powerpuff"
+                                },
+                                "password": {
+                                    "example": "password12345"
+                                }
+                            }
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "token": {
+                                    "type": "string",
+                                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVC..."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Incorrect username or password"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/notes": {
+            "get": {
+                "description": "Get an array of notes",
+                "security": [
+                    {
+                        "authBearer": []
+                    }
+                ],
+                "tags": [
+                    "Notes"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "_id": {
+                                        "type": "string",
+                                        "example": "662b4bd91d56eb6312a82adb"
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Title"
+                                    },
+                                    "text": {
+                                        "type": "string",
+                                        "example": "Note"
+                                    },
+                                    "createdAt": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-04-26T06:38:17.678Z"
+                                    },
+                                    "modifiedAt": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-04-26T06:38:17.678Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "result": {
+                                    "type": "string",
+                                    "example": "Authentication token missing",
+                                    "x-collapse-content": true
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a note",
+                "security": [
+                    {
+                        "authBearer": []
+                    }
+                ],
+                "tags": [
+                    "Notes"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "title": {
+                                    "example": "Title of note"
+                                },
+                                "text": {
+                                    "example": "Text of note"
+                                }
+                            }
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "title": {
+                                    "type": "string",
+                                    "example": "Title of note"
+                                },
+                                "text": {
+                                    "type": "string",
+                                    "example": "Text of note"
+                                },
+                                "_id": {
+                                    "type": "string",
+                                    "example": "662b50375c3bf740f01c0ca6"
+                                },
+                                "createdAt": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "example": "2024-04-26T06:56:55.825Z"
+                                },
+                                "updatedAt": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "example": "2024-04-26T06:56:55.825Z"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "example": "Title is too long or Text is too long",
+                                    "x-collapse-content": true
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "result": {
+                                    "type": "string",
+                                    "example": "Authentication token missing",
+                                    "x-collapse-content": true
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a note",
+                "security": [
+                    {
+                        "authBearer": []
+                    }
+                ],
+                "tags": [
+                    "Notes"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "title": {
+                                    "example": "New title"
+                                },
+                                "text": {
+                                    "example": "New text"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "title": {
+                                    "type": "string",
+                                    "example": "New title"
+                                },
+                                "text": {
+                                    "type": "string",
+                                    "example": "New text"
+                                },
+                                "_id": {
+                                    "type": "string",
+                                    "example": "662b50375c3bf740f01c0ca6"
+                                },
+                                "createdAt": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "example": "2024-04-26T06:56:55.825Z"
+                                },
+                                "updatedAt": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "example": "2024-04-26T07:20:40.124Z"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "example": "Title is too long or Text is too long",
+                                    "x-collapse-content": true
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "result": {
+                                    "type": "string",
+                                    "example": "Authentication token missing",
+                                    "x-collapse-content": true
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a note",
+                "security": [
+                    {
+                        "authBearer": []
+                    }
+                ],
+                "tags": [
+                    "Notes"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Note deleted"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "result": {
+                                    "type": "string",
+                                    "example": "Authentication token missing",
+                                    "x-collapse-content": true
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Note not found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/notes/search": {
+            "get": {
+                "description": "Search notes by title",
+                "security": [
+                    {
+                        "authBearer": []
+                    }
+                ],
+                "tags": [
+                    "Notes"
+                ],
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "_id": {
+                                        "type": "string",
+                                        "example": "662b4bd91d56eb6312a82adb"
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Title"
+                                    },
+                                    "text": {
+                                        "type": "string",
+                                        "example": "Note"
+                                    },
+                                    "createdAt": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-04-26T06:38:17.678Z"
+                                    },
+                                    "updatedAt": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-04-26T06:38:17.678Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "result": {
+                                    "type": "string",
+                                    "example": "Authentication token missing",
+                                    "x-collapse-content": true
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "result": {
+                                    "type": "string",
+                                    "example": "No notes found"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    }
+}
